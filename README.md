@@ -131,6 +131,5 @@ Note: Render's free tier sleeps when idle, so the first request after a pause ca
 ## Known limitations
 
 - Single-user by design: no teams, sharing, comments or real-time sync.
-- No email verification or password reset.
 - Project deletion is an ordered two-step delete, not a multi-document transaction.
 - Overdue is evaluated against the client's local date.
