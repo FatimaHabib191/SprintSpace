@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Fraunces', ui-serif, Georgia, serif;
+
+  --color-ivory: #faf6ee;
+  --color-paper: #fffdf8;
+  --color-line: #e6dfd0;
+  --color-line-strong: #d5ccb8;
+
+  --color-forest-50: #eef4ef;
+  --color-forest-100: #dbe8de;
+  --color-forest-200: #b9d1bf;
+  --color-forest-500: #3f7358;
+  --color-forest-600: #2f5d46;
+  --color-forest-700: #264c39;
+  --color-forest-800: #1e3c2d;
+
+  --color-sage-50: #f1f4ee;
+  --color-sage-100: #e4ebe0;
+  --color-sage-200: #cfdac8;
+  --color-sage-400: #8aa68f;
+  --color-sage-600: #5d7a63;
+
+  --color-charcoal: #2b2f2c;
+  --color-ink-soft: #4a4f4a;
+  --color-ink-muted: #6b706a;
+
+  --color-terracotta-50: #fbefe9;
+  --color-terracotta-100: #f5dccf;
+  --color-terracotta-500: #c4704f;
+  --color-terracotta-600: #a95a3b;
+  --color-terracotta-700: #8a4a31;
+
+  --color-ochre-50: #fbf3e0;
+  --color-ochre-600: #9a6b12;
+  --color-slate-soft: #4f6d7a;
+
+  --shadow-soft: 0 1px 2px rgb(43 47 44 / 0.05), 0 1px 1px rgb(43 47 44 / 0.03);
+  --shadow-lift: 0 4px 14px -4px rgb(43 47 44 / 0.12), 0 2px 4px rgb(43 47 44 / 0.05);
+
+  --animate-fade-up: fade-up 0.5s ease-out both;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@layer base {
+  html { color-scheme: light; }
+  body {
+    @apply bg-ivory text-charcoal font-sans antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+  h1, h2, h3 { @apply font-serif tracking-tight; }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-forest-600; }
+  ::selection { background: var(--color-forest-200); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+/* Dialog / sheet animations */
+@keyframes overlay-in { from { opacity: 0 } to { opacity: 1 } }
+@keyframes pop-in { from { opacity: 0; transform: translate(-50%, -48%) scale(0.97) } to { opacity: 1; transform: translate(-50%, -50%) scale(1) } }
+@keyframes sheet-in { from { transform: translateX(100%) } to { transform: translateX(0) } }
+[data-state='open'].ss-overlay { animation: overlay-in 150ms ease-out; }
+[data-state='open'].ss-dialog { animation: pop-in 180ms ease-out; }
+[data-state='open'].ss-sheet { animation: sheet-in 220ms cubic-bezier(0.22, 1, 0.36, 1); }
