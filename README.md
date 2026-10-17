@@ -73,10 +73,9 @@ Status codes: `200/201/204` success (task and auth-logout deletes return 204) ·
 | `JWT_SECRET` | ≥ 32 random chars in production (`openssl rand -hex 48`) |
 | `JWT_EXPIRES_IN` | Default `7d` |
 | `CLIENT_ORIGIN` | Comma-separated allowed browser origins (credentialed CORS) |
-| `COOKIE_SAMESITE` | `lax` (default in dev; use with the Vercel proxy) or `none` (cross-site; forces `Secure`) |
 | `PORT`, `NODE_ENV` | Default `5000`, `development` |
 
-**Frontend** (`frontend/.env`, optional): `VITE_API_URL` — absolute API URL. Leave unset to use the relative `/api` (Vite dev proxy locally, Vercel rewrite in production).
+**Frontend** (`frontend/.env`, optional): `VITE_API_URL` — absolute API URL.
 
 ## Local setup
 
@@ -108,25 +107,6 @@ npm run typecheck && npm run lint && npm test && npm run build
 ```
 
 Backend integration tests (supertest) cover: register/login/logout/`me`, expired/invalid tokens; project create/edit/archive/restore/delete with task cascade; task CRUD, validation and filters; move/reorder persistence; dashboard numbers after each kind of mutation; and cross-user isolation (read, update, delete, move, and forged `owner`/`project` in bodies). Unit tests cover position math. Frontend tests cover Zod schemas, utilities, move-position logic and sign-in behaviour (validation, server errors, duplicate-submit prevention).
-
-## Deployment
-
-**1. MongoDB Atlas** — create the cluster and URI as above.
-
-**2. API on Render**
-1. Push the repo to GitHub. Render → New → **Blueprint** → select the repo (uses `render.yaml`).
-2. Set `MONGODB_URI` and `CLIENT_ORIGIN` (your future Vercel URL, e.g. `https://sprintspace.vercel.app`). `JWT_SECRET` is generated.
-3. Deploy; confirm `https://<service>.onrender.com/api/health` returns `{"data":{"status":"ok"}}`.
-(Railway works the same: root `backend`, build `npm ci --include=dev && npm run build`, start `npm start`, same variables.)
-
-**3. Frontend on Vercel**
-1. In `frontend/vercel.json`, replace `YOUR-RENDER-SERVICE.onrender.com` with your Render host and commit.
-2. Vercel → New Project → import the repo → **Root Directory: `frontend`** (Vite is auto-detected).
-3. Deploy, then make sure Render's `CLIENT_ORIGIN` exactly matches the Vercel URL (no trailing slash) and redeploy the API if you changed it.
-
-**Why a proxy?** With the `/api` rewrite the browser only talks to the Vercel origin, so the session cookie is first-party and works in Safari/Firefox/Chrome despite third-party-cookie blocking. If you prefer direct cross-origin calls, set `VITE_API_URL`, `COOKIE_SAMESITE=none` and `CLIENT_ORIGIN`; expect some browsers to block the cookie.
-
-Note: Render's free tier sleeps when idle, so the first request after a pause can take ~30 s.
 
 ## Known limitations
 
